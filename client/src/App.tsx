@@ -7,7 +7,6 @@ import type { PageData } from '../../server/src/schema';
 function App() {
   const [currentPage, setCurrentPage] = useState<string>('home');
   const [pageData, setPageData] = useState<PageData | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
 
   // Default menu items since the API returns empty arrays (stub implementation)
   const menuItems = [
@@ -310,29 +309,23 @@ function App() {
 
   // Load page data directly from defaultContent instead of API
   const loadPageData = (slug: string) => {
-    setIsLoading(true);
-    
-    // Simulate a brief loading state for better UX
-    setTimeout(() => {
-      const content = defaultContent[slug as keyof typeof defaultContent];
-      if (content) {
-        setPageData({
-          id: 1,
-          menu_item_id: 1,
-          name: menuItems.find(item => item.slug === slug)?.name || 'Page',
-          slug,
-          title: content.title,
-          content: content.content,
-          meta_description: content.meta_description || null,
-          meta_keywords: null,
-          is_active: true,
-          order: menuItems.find(item => item.slug === slug)?.order || 1
-        });
-      } else {
-        setPageData(null);
-      }
-      setIsLoading(false);
-    }, 200); // Brief delay to show loading state
+    const content = defaultContent[slug as keyof typeof defaultContent];
+    if (content) {
+      setPageData({
+        id: 1,
+        menu_item_id: 1,
+        name: menuItems.find(item => item.slug === slug)?.name || 'Page',
+        slug,
+        title: content.title,
+        content: content.content,
+        meta_description: content.meta_description || null,
+        meta_keywords: null,
+        is_active: true,
+        order: menuItems.find(item => item.slug === slug)?.order || 1
+      });
+    } else {
+      setPageData(null);
+    }
   };
 
   useEffect(() => {
@@ -413,12 +406,7 @@ function App() {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
-        {isLoading ? (
-          <div className="text-center py-12">
-            <div className="animate-spin inline-block w-8 h-8 border-4 border-current border-t-transparent text-blue-600 rounded-full" />
-            <p className="mt-4 text-gray-600">Loading...</p>
-          </div>
-        ) : pageData ? (
+        {pageData ? (
           <div className="max-w-4xl mx-auto">
             {/* Page Header */}
             <div className="text-center mb-12">
