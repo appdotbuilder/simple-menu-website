@@ -5,6 +5,8 @@
 
 @layer base {
   :root {
+    --light-gradient-start: #f8faff;
+    --light-gradient-end: #eef2f9;
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
@@ -28,6 +30,8 @@
   }
 
   .dark {
+    --dark-gradient-start: #1a1a2e;
+    --dark-gradient-end: #16213e;
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
     --card: 222.2 84% 4.9%;
@@ -55,8 +59,12 @@
     @apply border-border;
   }
   body {
-    background: linear-gradient(to top right, #f8faff, #eef2f9);
+    background: linear-gradient(to top right, var(--light-gradient-start), var(--light-gradient-end));
     @apply text-foreground;
+  }
+
+  .dark body {
+    background: linear-gradient(to top right, var(--dark-gradient-start), var(--dark-gradient-end));
   }
 }
 

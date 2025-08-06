@@ -1,12 +1,10 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import type { PageData } from '../../server/src/schema';
 
 function App() {
   const [currentPage, setCurrentPage] = useState<string>('home');
-  const [pageData, setPageData] = useState<PageData | null>(null);
 
   // Default menu items since the API returns empty arrays (stub implementation)
   const menuItems = [
@@ -307,30 +305,26 @@ function App() {
     }
   };
 
-  // Load page data directly from defaultContent instead of API
-  const loadPageData = (slug: string) => {
-    const content = defaultContent[slug as keyof typeof defaultContent];
-    if (content) {
-      setPageData({
-        id: 1,
-        menu_item_id: 1,
-        name: menuItems.find(item => item.slug === slug)?.name || 'Page',
-        slug,
-        title: content.title,
-        content: content.content,
-        meta_description: content.meta_description || null,
-        meta_keywords: null,
-        is_active: true,
-        order: menuItems.find(item => item.slug === slug)?.order || 1
-      });
-    } else {
-      setPageData(null);
-    }
+  // Get current page data directly
+  const getCurrentPageData = () => {
+    const content = defaultContent[currentPage as keyof typeof defaultContent];
+    if (!content) return null;
+    
+    return {
+      id: 1,
+      menu_item_id: 1,
+      name: menuItems.find(item => item.slug === currentPage)?.name || 'Page',
+      slug: currentPage,
+      title: content.title,
+      content: content.content,
+      meta_description: content.meta_description || null,
+      meta_keywords: null,
+      is_active: true,
+      order: menuItems.find(item => item.slug === currentPage)?.order || 1
+    };
   };
 
-  useEffect(() => {
-    loadPageData(currentPage);
-  }, [currentPage]);
+  const pageData = getCurrentPageData();
 
   const handleNavigation = (slug: string) => {
     setCurrentPage(slug);
